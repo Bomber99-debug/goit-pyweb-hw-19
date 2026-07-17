@@ -12,19 +12,19 @@ class Contact(Base):
 	__tablename__ = 'contacts'
 	id: Mapped[ int ] = mapped_column('id', primary_key=True)
 	first_name: Mapped[ str ] = mapped_column('first_name', String(50), index=True, nullable=False)
-	last_name: Mapped[ str | None ] = mapped_column('last_name', String(50))
+	last_name: Mapped[ str ] = mapped_column('last_name', String(50), nullable=False)
 	email: Mapped[ str ] = mapped_column('email', String(250))
-	birthday: Mapped[ Date ] = mapped_column('birthday', Date, index=True)
+	birthday: Mapped[ date ] = mapped_column('birthday', Date, index=True)
 	notes: Mapped[ str | None ] = mapped_column('notes', String(1000))
 
-	telephones: Mapped[ list[ "Telephone" ] ] = relationship(back_populates='contact', cascade="all, delete-orphan")
+	phones: Mapped[ list[ "Phone" ] ] = relationship(back_populates='contact', cascade="all, delete-orphan")
 
 
-class Telephone(Base):
-	__tablename__ = 'telephones'
+class Phone(Base):
+	__tablename__ = 'phones'
 	id: Mapped[ int ] = mapped_column('id', primary_key=True)
-	telephone: Mapped[ str ] = mapped_column('telephone', String(13), index=True, nullable=False)
+	number: Mapped[ str ] = mapped_column('number', String(13), index=True, nullable=False)
 
 	contact_id: Mapped[ int ] = mapped_column('contact_id', ForeignKey('contacts.id'), nullable=False)
 
-	contact: Mapped[ "Contact" ] = relationship(back_populates='telephones')
+	contact: Mapped[ "Contact" ] = relationship(back_populates='phones')
