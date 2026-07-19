@@ -1,18 +1,12 @@
-import select
 from fastapi import APIRouter, HTTPException, Depends, status, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_db
-from src.entity.models import Contact, Phone
 from src.repository import contacts as contact_repository
 from src.schemas.contacts import (
-	ContactSchema,
 	ContactUpdateSchema,
 	ContactResponseSchema,
 	ContactCreateSchema,
-	PhoneSchema,
-	PhoneUpdateSchema,
-	PhoneResponseSchema,
 	)
 
 cont = APIRouter(prefix="/contacts", tags=[ "contacts" ])
@@ -41,22 +35,32 @@ async def create_contact(body: ContactCreateSchema, db: AsyncSession = Depends(g
 	return contact
 
 
-@cont.put("/{contact_id}", response_model=ContactResponseSchema)
+@cont.put("/{contact_id}", response_model=ContactUpdateSchema)
 async def update_contact(
 		body: ContactUpdateSchema,
 		contact_id: int = Path(ge=1),
 		db: AsyncSession = Depends(get_db),
 		):
 	contact = await contact_repository.update_contact(
-		db=db,
-		body=body,
-		contact_id=contact_id,
+			db=db,
+			body=body,
+			contact_id=contact_id,
 			)
 	if contact is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
 	return contact
 
 
-@cont.delete("/", response_model=ContactResponseSchema)
-async def delete_contact():
-	...
+@cont.delete(
+		"/{contact_id}",
+		response_model=ContactResponseSchema,
+		status_code=status.HTTP_204_NO_CONTENT,
+		)
+async def delete_contact(db: AsyncSession = Depends(get_db), contact_id: int = Path(ge=1)):
+	contact = await contact_repository.delete_contact(db=db, contact_id=contact_id)
+	if contact is None:
+		raise HTTPException(
+				status_code=status.HTTP_404_NOT_FOUND,
+				detail="Contact not found",
+				)
+	return contact
