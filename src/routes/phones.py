@@ -33,7 +33,7 @@ async def get_contact_by_id(db: AsyncSession = Depends(get_db), contact_id: int 
 
 
 @phone.post("/", response_model=PhoneSchema)
-async def create_phone(db: AsyncSession = Depends(get_db), body: PhoneSchema):
+async def create_phone(body: PhoneSchema, db: AsyncSession = Depends(get_db)):
 	number = await phones_repository.create_phone(db=db, body=body)
 	return number
 
