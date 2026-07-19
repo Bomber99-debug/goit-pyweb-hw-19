@@ -23,8 +23,7 @@ class Contact(Base):
 class Phone(Base):
 	__tablename__ = 'phones'
 	id: Mapped[ int ] = mapped_column('id', primary_key=True)
-	number: Mapped[ str ] = mapped_column('number', String(13), index=True, nullable=False)
-
+	number: Mapped[ str ] = mapped_column('number', String(13), index=True, nullable=False, unique=True)
 	contact_id: Mapped[ int ] = mapped_column('contact_id', ForeignKey('contacts.id'), nullable=False)
 
 	contact: Mapped[ "Contact" ] = relationship(back_populates='phones')

@@ -8,8 +8,8 @@ from src.routes import contacts
 
 app = FastAPI()
 
-app.include_router(contacts.cont, prefix="/contacts")
-app.include_router(contacts.phone, prefix="/phone")
+app.include_router(contacts.cont)
+app.include_router(contacts.phone)
 
 
 @app.get("/")
