@@ -14,7 +14,7 @@ from src.schemas.contacts import (
 	)
 
 
-async def get_contacts(db: AsyncSession, skip: int = 0, limit: int = 100):
+async def contacts(db: AsyncSession, skip: int = 0, limit: int = 100):
 	stmt = (select(Contact)
 	        .options(selectinload(Contact.phones))
 	        .offset(skip)
@@ -23,10 +23,11 @@ async def get_contacts(db: AsyncSession, skip: int = 0, limit: int = 100):
 	return contacts.scalars().all()
 
 
-async def get_contact_by_id(db: AsyncSession, contact_id: int):
+async def contact_by_id(db: AsyncSession, contact_id: int):
 	stmt = (select(Contact)
 	        .filter_by(id=contact_id)
-	        .options(selectinload(Contact.phones)))
+	        # .options(selectinload(Contact.phones))
+			)
 	contacts = await db.execute(stmt)
 	return contacts.scalar_one_or_none()
 

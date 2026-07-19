@@ -25,19 +25,19 @@ async def get_contacts(
 		offset: int = Query(default=0, ge=0),
 		db: AsyncSession = Depends(get_db),
 		):
-	contacts = await contact_repository.get_contacts(db, limit, offset)
+	contacts = await contact_repository.contacts(db=db, skip=offset, limit=limit)
 	return contacts
 
 
-@cont.get("/{cont_id}", response_model=ContactResponseSchema)
-async def get_contact_by_id(db: AsyncSession, contact_id: int):
-	contacts = await contact_repository.get_contact_by_id(db, contact_id)
+@cont.get("/{contact_id}", response_model=ContactResponseSchema)
+async def get_contact_by_id(db: AsyncSession, contact_id: int = Path(ge=1)):
+	contacts = await contact_repository.contact_by_id(db=db, contact_id=contact_id)
 	return contacts
 
 
 @cont.post("/", response_model=ContactCreateSchema, status_code=status.HTTP_201_CREATED)
 async def create_contact(db: AsyncSession, body: ContactSchema):
-	contact = await contact_repository.create_contact(db, body)
+	contact = await contact_repository.create_contact(db=db, body=body)
 	return contact
 
 
