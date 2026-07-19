@@ -19,8 +19,8 @@ async def contacts(db: AsyncSession, skip: int = 0, limit: int = 100):
 	        .options(selectinload(Contact.phones))
 	        .offset(skip)
 	        .limit(limit))
-	contacts = await db.execute(stmt)
-	return contacts.scalars().all()
+	cont = await db.execute(stmt)
+	return cont.scalars().all()
 
 
 async def contact_by_id(db: AsyncSession, contact_id: int):
@@ -28,8 +28,8 @@ async def contact_by_id(db: AsyncSession, contact_id: int):
 	        .filter_by(id=contact_id)
 	        # .options(selectinload(Contact.phones))
 			)
-	contacts = await db.execute(stmt)
-	return contacts.scalar_one_or_none()
+	cont = await db.execute(stmt)
+	return cont.scalar_one_or_none()
 
 
 async def create_contact(db: AsyncSession, body: ContactSchema):
