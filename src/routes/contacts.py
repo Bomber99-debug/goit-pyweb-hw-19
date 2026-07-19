@@ -30,13 +30,13 @@ async def get_contacts(
 
 
 @cont.get("/{contact_id}", response_model=ContactResponseSchema)
-async def get_contact_by_id(db: AsyncSession, contact_id: int = Path(ge=1)):
+async def get_contact_by_id(db: AsyncSession = Depends(get_db), contact_id: int = Path(ge=1)):
 	contacts = await contact_repository.contact_by_id(db=db, contact_id=contact_id)
 	return contacts
 
 
 @cont.post("/", response_model=ContactCreateSchema, status_code=status.HTTP_201_CREATED)
-async def create_contact(db: AsyncSession, body: ContactSchema):
+async def create_contact(body: ContactSchema, db: AsyncSession = Depends(get_db)):
 	contact = await contact_repository.create_contact(db=db, body=body)
 	return contact
 
