@@ -39,6 +39,7 @@ class ContactUpdateSchema(ContactSchema):
 	email: EmailStr
 	birthday: date
 	notes: str = Field(max_length=1000)
+	phones: list[ PhoneResponseSchema ]
 
 
 class ContactResponseSchema(BaseModel):

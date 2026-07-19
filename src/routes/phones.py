@@ -6,6 +6,7 @@ from src.repository import phones as phones_repository
 from src.schemas.contacts import (
 	PhoneResponseSchema,
 	PhoneUpdateSchema,
+	PhoneSchema,
 	)
 
 phone = APIRouter(prefix="/phone", tags=[ "phone" ])
@@ -29,6 +30,12 @@ async def get_contact_by_id(db: AsyncSession = Depends(get_db), contact_id: int 
 	if phones is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Phone not found")
 	return phones
+
+
+@phone.post("/", response_model=PhoneSchema)
+async def create_phone(db: AsyncSession = Depends(get_db), body: PhoneSchema):
+	number = await phones_repository.create_phone(db=db, body=body)
+	return number
 
 
 @phone.put("/{phone_id}", response_model=PhoneUpdateSchema)

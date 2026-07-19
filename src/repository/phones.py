@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.entity.models import Phone
-from src.schemas.contacts import PhoneUpdateSchema
+from src.schemas.contacts import PhoneUpdateSchema, PhoneSchema
 
 
 async def phones(db: AsyncSession, skip: int = 0, limit: int = 100):
@@ -20,6 +20,11 @@ async def phone_by_id(db: AsyncSession, contact_id: int):
 	number = await db.execute(stmt)
 	return number.scalar_one_or_none()
 
+async def create_phone(db: AsyncSession, body: PhoneSchema):
+	phone = Phone(**body.model_dump(exclude_unset=True))
+	db.add(phone)
+	await db.commit()
+	return phone
 
 async def update_phone(db: AsyncSession, body: PhoneUpdateSchema, phone_id: int):
 	stmt = select(Phone).filter_by(id=phone_id)
