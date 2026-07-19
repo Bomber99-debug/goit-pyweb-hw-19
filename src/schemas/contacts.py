@@ -4,13 +4,15 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class PhoneSchema(BaseModel):
+	id: int
 	number: str = Field(min_length=9, max_length=13)
-	contact_id: int = 1
+	contact_id: int
 
 
 class PhoneUpdateSchema(PhoneSchema):
+	id: int
 	number: str = Field(min_length=9, max_length=13)
-	contact_id: int = 1
+	contact_id: int
 
 
 class PhoneResponseSchema(PhoneSchema):
@@ -22,32 +24,35 @@ class PhoneResponseSchema(PhoneSchema):
 
 
 class PhoneCreateSchema(BaseModel):
+	id: int
 	number: str
 
 
 class ContactSchema(BaseModel):
+	id: int
 	first_name: str = Field(min_length=3, max_length=50)
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
 	birthday: date
-	notes: str = Field(max_length=1000)
+	notes: str | None = Field(max_length=1000)
 
 
 class ContactUpdateSchema(ContactSchema):
+	id: int
 	first_name: str = Field(min_length=3, max_length=50)
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
 	birthday: date
-	notes: str = Field(max_length=1000)
+	notes: str | None = Field(max_length=1000)
 
 
 class ContactResponseSchema(BaseModel):
-	id: int = 1
+	id: int
 	first_name: str
 	last_name: str
 	email: EmailStr
 	birthday: date
-	notes: str
+	notes: str | None
 	phones: list[ PhoneResponseSchema ]
 
 	class Config:
@@ -55,9 +60,10 @@ class ContactResponseSchema(BaseModel):
 
 
 class ContactCreateSchema(BaseModel):
+	id: int
 	first_name: str
 	last_name: str
 	email: EmailStr
 	birthday: date
-	notes: str
+	notes: str | None
 	phones: list[ PhoneCreateSchema ]

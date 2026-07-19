@@ -24,9 +24,9 @@ async def get_phones(
 	return phones
 
 
-@phone.get("/{contact_id}", response_model=PhoneResponseSchema)
-async def get_contact_by_id(db: AsyncSession = Depends(get_db), contact_id: int = Path(ge=1)):
-	phones = await phones_repository.phone_by_id(db=db, contact_id=contact_id)
+@phone.get("/{phone_id}", response_model=PhoneResponseSchema)
+async def get_phone_by_id(db: AsyncSession = Depends(get_db), phone_id: int = Path(ge=1)):
+	phones = await phones_repository.phone_by_id(db=db, phone_id=phone_id)
 	if phones is None:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Phone not found")
 	return phones
