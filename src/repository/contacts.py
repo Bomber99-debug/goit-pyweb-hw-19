@@ -8,6 +8,7 @@ from src.entity.models import Contact, Phone
 from src.schemas.contacts import (
 	ContactSchema,
 	ContactUpdateSchema,
+	ContactCreateSchema,
 	PhoneSchema,
 	PhoneUpdateSchema,
 	PhoneCreateSchema,
@@ -27,12 +28,12 @@ async def contact_by_id(db: AsyncSession, contact_id: int):
 	stmt = (select(Contact)
 	        .filter_by(id=contact_id)
 	        # .options(selectinload(Contact.phones))
-			)
+	        )
 	cont = await db.execute(stmt)
 	return cont.scalar_one_or_none()
 
 
-async def create_contact(db: AsyncSession, body: ContactSchema):
+async def create_contact(db: AsyncSession, body: ContactCreateSchema):
 	contact = Contact(**body.model_dump(exclude_unset=True))
 	db.add(contact)
 	await db.commit()

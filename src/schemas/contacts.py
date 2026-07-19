@@ -19,6 +19,7 @@ class PhoneResponseSchema(PhoneSchema):
 	class Config:
 		from_attributes = True
 
+
 class PhoneCreateSchema(BaseModel):
 	number: str
 
@@ -29,7 +30,7 @@ class ContactSchema(BaseModel):
 	email: EmailStr
 	birthday: date
 	notes: str = Field(max_length=1000)
-	number: list[ PhoneResponseSchema ]
+	phones: list[ PhoneResponseSchema ]
 
 
 class ContactUpdateSchema(ContactSchema):
@@ -46,7 +47,8 @@ class ContactResponseSchema(BaseModel):
 	last_name: str
 	email: EmailStr
 	birthday: date
-	number: list[ PhoneResponseSchema ]
+	notes: str
+	phones: list[ PhoneResponseSchema ]
 
 	class Config:
 		from_attributes = True
@@ -57,4 +59,5 @@ class ContactCreateSchema(BaseModel):
 	last_name: str
 	email: EmailStr
 	birthday: date
-	number: list[ PhoneCreateSchema ]
+	notes: str
+	phones: list[ PhoneCreateSchema ]
