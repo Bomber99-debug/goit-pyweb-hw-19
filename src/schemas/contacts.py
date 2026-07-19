@@ -10,7 +10,6 @@ class PhoneSchema(BaseModel):
 
 
 class PhoneUpdateSchema(PhoneSchema):
-	id: int
 	number: str = Field(min_length=9, max_length=13)
 	contact_id: int
 
@@ -24,7 +23,6 @@ class PhoneResponseSchema(PhoneSchema):
 
 
 class PhoneCreateSchema(BaseModel):
-	id: int
 	number: str
 
 
@@ -38,7 +36,6 @@ class ContactSchema(BaseModel):
 
 
 class ContactUpdateSchema(ContactSchema):
-	id: int
 	first_name: str = Field(min_length=3, max_length=50)
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
@@ -60,7 +57,6 @@ class ContactResponseSchema(BaseModel):
 
 
 class ContactCreateSchema(BaseModel):
-	id: int
 	first_name: str
 	last_name: str
 	email: EmailStr

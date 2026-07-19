@@ -13,9 +13,9 @@ async def phones(db: AsyncSession, skip: int = 0, limit: int = 100):
 	return numbers.scalars().all()
 
 
-async def phone_by_id(db: AsyncSession, contact_id: int):
+async def phone_by_id(db: AsyncSession, phone_id: int):
 	stmt = (select(Phone)
-	        .filter_by(id=contact_id)
+	        .filter_by(id=phone_id)
 	        )
 	number = await db.execute(stmt)
 	return number.scalar_one_or_none()
