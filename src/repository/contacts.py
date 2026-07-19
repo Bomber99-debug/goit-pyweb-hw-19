@@ -34,7 +34,12 @@ async def contact_by_id(db: AsyncSession, contact_id: int):
 
 
 async def create_contact(db: AsyncSession, body: ContactCreateSchema):
-	contact = Contact(**body.model_dump(exclude_unset=True))
+	data = body.model_dump(exclude={"phones"})
+	phones = [
+			Phone(**phone.model_dump())
+			for phone in body.phones
+			]
+	contact = Contact(**data, phones=phones)
 	db.add(contact)
 	await db.commit()
 	await db.refresh(contact)
