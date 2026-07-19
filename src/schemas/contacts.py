@@ -1,20 +1,20 @@
 from datetime import date
-from typing import Any
 
 from pydantic import BaseModel, EmailStr, Field
 
 
 class PhoneSchema(BaseModel):
-	number: str = Field(min_length=10, max_length=13)
+	number: str = Field(min_length=9, max_length=13)
 	contact_id: int = 1
 
 
 class PhoneUpdateSchema(PhoneSchema):
-	number: str = Field(min_length=10, max_length=13)
+	number: str = Field(min_length=9, max_length=13)
 	contact_id: int = 1
 
 
 class PhoneResponseSchema(PhoneSchema):
+	id: int
 	number: str
 
 	class Config:

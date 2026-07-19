@@ -5,11 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_db
 from src.routes import contacts
+from src.routes import phones
 
 app = FastAPI()
 
 app.include_router(contacts.cont)
-app.include_router(contacts.phone)
+app.include_router(phones.phone)
 
 
 @app.get("/")
