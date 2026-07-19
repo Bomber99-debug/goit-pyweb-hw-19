@@ -12,6 +12,7 @@ class DatabaseSessionManager:
 				autoflush=False,
 				autocommit=False,
 				bind=self._engine,
+				expire_on_commit=False,
 				)
 
 	@contextlib.asynccontextmanager

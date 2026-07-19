@@ -41,9 +41,20 @@ async def create_contact(body: ContactCreateSchema, db: AsyncSession = Depends(g
 	return contact
 
 
-@cont.put("/", response_model=ContactResponseSchema)
-async def update_contact():
-	...
+@cont.put("/{contact_id}", response_model=ContactResponseSchema)
+async def update_contact(
+		body: ContactUpdateSchema,
+		contact_id: int = Path(ge=1),
+		db: AsyncSession = Depends(get_db),
+		):
+	contact = await contact_repository.update_contact(
+		db=db,
+		body=body,
+		contact_id=contact_id,
+			)
+	if contact is None:
+		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
+	return contact
 
 
 @cont.delete("/", response_model=ContactResponseSchema)
