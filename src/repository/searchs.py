@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -35,12 +35,13 @@ async def search_email(db: AsyncSession, email):
 
 
 async def search_birthday(db: AsyncSession):
-	start_date = datetime.today()
-	end_date = start_date + timedelta(days=7)
+	today = date.today()
+	next_7_days = [ today + timedelta(days=i) for i in range(8) ]
+	target_days = [ d.strftime('%m-%d') for d in next_7_days ]
 
 	stmt = (select(Contact)
 	        .options(selectinload(Contact.phones))
-	        .where(Contact.birthday.between(start_date, end_date))
+	        .where(func.to_char(Contact.birthday, 'MM-DD').in_(target_days))
 	        )
 	cont = await db.execute(stmt)
 	return cont.scalars().all()
