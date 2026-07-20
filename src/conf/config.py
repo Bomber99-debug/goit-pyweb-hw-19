@@ -1,7 +1,21 @@
-from src.conf.connect_settings import user, db_name, password, host, port
+from typing import ClassVar
 
-class Config:
-	DB_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{db_name}"
+from src.conf.connect_settings import (
+    db_host,
+    db_name,
+    db_password,
+    db_port,
+    db_user,
+)
 
 
-config = Config()
+class DatabaseConfig:
+    """Зберігає конфігурацію підключення до бази даних."""
+
+    DATABASE_URL: ClassVar[str] = (
+        f"postgresql+asyncpg://"
+        f"{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    )
+
+
+database_config = DatabaseConfig()

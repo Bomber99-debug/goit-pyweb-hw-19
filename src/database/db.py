@@ -1,38 +1,54 @@
 import contextlib
+from collections.abc import AsyncIterator
 
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
-from src.conf.config import config
+from src.conf.config import database_config
 
 
 class DatabaseSessionManager:
-	def __init__(self, url: str):
-		self._engine: AsyncEngine | None = create_async_engine(url)
-		self._session_maker: async_sessionmaker = async_sessionmaker(
-				autoflush=False,
-				autocommit=False,
-				bind=self._engine,
-				expire_on_commit=False,
-				)
+    """Керує асинхронним підключенням і сесіями бази даних."""
 
-	@contextlib.asynccontextmanager
-	async def session(self):
-		if self._session_maker is None:
-			raise Exception("Session maker not initialized")
-		session = self._session_maker()
-		try:
-			yield session
-		except Exception as e:
-			print(e)
-			await session.rollback()
-			raise e
-		finally:
-			await session.close()
+    def __init__(self, database_url: str) -> None:
+        self._engine: AsyncEngine = create_async_engine(database_url)
+        self._session_factory: async_sessionmaker[AsyncSession] = (
+            async_sessionmaker(
+                bind=self._engine,
+                autoflush=False,
+                autocommit=False,
+                expire_on_commit=False,
+            )
+        )
+
+    @contextlib.asynccontextmanager
+    async def session(self) -> AsyncIterator[AsyncSession]:
+        """Створює сесію та закриває її після завершення роботи."""
+
+        if self._session_factory is None:
+            raise RuntimeError("Session factory is not initialized")
+
+        database_session = self._session_factory()
+
+        try:
+            yield database_session
+        except Exception as error:
+            print(error)
+            await database_session.rollback()
+            raise error
+        finally:
+            await database_session.close()
 
 
-sessionmanager = DatabaseSessionManager(config.DB_URL)
+session_manager = DatabaseSessionManager(database_config.DATABASE_URL)
 
 
-async def get_db():
-	async with sessionmanager.session() as session:
-		yield session
+async def get_db() -> AsyncIterator[AsyncSession]:
+    """Надає сесію бази даних як залежність FastAPI."""
+
+    async with session_manager.session() as database_session:
+        yield database_session
