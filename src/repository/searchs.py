@@ -40,7 +40,7 @@ async def search_birthday(db: AsyncSession):
 
 	stmt = (select(Contact)
 	        .options(selectinload(Contact.phones))
-			.where(Contact.birthday.between(start_date, end_date))
+	        .where(Contact.birthday.between(start_date, end_date))
 	        )
 	cont = await db.execute(stmt)
 	return cont.scalars().all()
