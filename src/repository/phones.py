@@ -39,7 +39,7 @@ async def get_phone_by_id(
 
 async def create_phone(
 		db: AsyncSession,
-		phone_data: PhoneSchema,
+		phone_data: PhoneCreateSchema,
 		) -> Phone:
 	"""Створює новий телефонний номер."""
 

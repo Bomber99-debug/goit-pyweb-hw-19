@@ -12,10 +12,10 @@ from src.conf.connect_settings import (
 class DatabaseConfig:
     """Зберігає конфігурацію підключення до бази даних."""
 
-    DATABASE_URL: ClassVar[str] = (
+    DB_URL: ClassVar[str] = (
         f"postgresql+asyncpg://"
         f"{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     )
 
 
-database_config = DatabaseConfig()
+config = DatabaseConfig()
