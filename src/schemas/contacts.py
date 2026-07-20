@@ -4,7 +4,6 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class PhoneSchema(BaseModel):
-	id: int
 	number: str = Field(min_length=9, max_length=13)
 	contact_id: int
 
@@ -27,7 +26,6 @@ class PhoneCreateSchema(BaseModel):
 
 
 class ContactSchema(BaseModel):
-	id: int
 	first_name: str = Field(min_length=3, max_length=50)
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
