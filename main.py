@@ -6,11 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.db import get_db
 from src.routes import contacts
 from src.routes import phones
+from src.routes import searchs
 
 app = FastAPI()
 
 app.include_router(contacts.cont)
 app.include_router(phones.phone)
+app.include_router(searchs.search)
 
 
 @app.get("/")
