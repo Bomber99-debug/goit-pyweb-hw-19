@@ -1,37 +1,31 @@
 from datetime import date, timedelta
 
-from sqlalchemy import select, func
+from sqlalchemy import or_, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.entity.models import Contact
 
 
-async def search_first_name(db: AsyncSession, first_name):
-	stmt = (select(Contact)
-	        .filter_by(first_name=first_name)
-	        .options(selectinload(Contact.phones))
-	        )
-	cont = await db.execute(stmt)
-	return cont.scalars().all()
+async def search_contacts(
+		db: AsyncSession,
+		query: str,
+		):
+	stmt = (
+		select(Contact)
+		.options(selectinload(Contact.phones))
+		.where(
+			or_(
+				Contact.first_name.ilike(f"%{query}%"),
+				Contact.last_name.ilike(f"%{query}%"),
+				Contact.email.ilike(f"%{query}%"),
+				)
+			)
+		)
 
+	result = await db.execute(stmt)
 
-async def search_last_name(db: AsyncSession, last_name):
-	stmt = (select(Contact)
-	        .filter_by(last_name=last_name)
-	        .options(selectinload(Contact.phones))
-	        )
-	cont = await db.execute(stmt)
-	return cont.scalars().all()
-
-
-async def search_email(db: AsyncSession, email):
-	stmt = (select(Contact)
-	        .filter_by(email=email)
-	        .options(selectinload(Contact.phones))
-	        )
-	cont = await db.execute(stmt)
-	return cont.scalars().all()
+	return result.scalars().all()
 
 
 async def search_birthday(db: AsyncSession):
