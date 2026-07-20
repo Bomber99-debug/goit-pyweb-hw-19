@@ -40,7 +40,7 @@ class ContactUpdateSchema(ContactSchema):
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
 	birthday: date
-	notes: str | None = Field(max_length=1000)
+	notes: str | None = None
 
 
 class ContactResponseSchema(BaseModel):
@@ -49,7 +49,7 @@ class ContactResponseSchema(BaseModel):
 	last_name: str
 	email: EmailStr
 	birthday: date
-	notes: str | None
+	notes: str | None = None
 	phones: list[ PhoneResponseSchema ]
 
 	class Config:
@@ -61,5 +61,5 @@ class ContactCreateSchema(BaseModel):
 	last_name: str
 	email: EmailStr
 	birthday: date
-	notes: str | None
+	notes: str | None = None
 	phones: list[ PhoneCreateSchema ]

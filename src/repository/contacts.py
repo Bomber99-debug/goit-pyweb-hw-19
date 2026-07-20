@@ -18,9 +18,9 @@ async def contacts(db: AsyncSession, skip: int = 0, limit: int = 100):
 	return cont.scalars().all()
 
 
-async def contact_by_id(db: AsyncSession, phone_id: int):
+async def contact_by_id(db: AsyncSession, contact_id: int):
 	stmt = (select(Contact)
-	        .filter_by(id=phone_id)
+	        .filter_by(id=contact_id)
 	        .options(selectinload(Contact.phones))
 	        )
 	cont = await db.execute(stmt)
