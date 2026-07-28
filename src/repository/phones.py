@@ -36,6 +36,16 @@ async def get_phone_by_id(
 
 	return result.scalar_one_or_none()
 
+async def get_phone_by_number(
+		db: AsyncSession,
+		phone_number: str,
+		) -> Phone | None:
+	"""Повертає телефонний номер за його наявності."""
+
+	statement = select(Phone).filter_by(number=phone_number)
+	result = await db.execute(statement)
+
+	return result.scalar_one_or_none()
 
 async def create_phone(
 		db: AsyncSession,

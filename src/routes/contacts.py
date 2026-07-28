@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.db import get_db
 from src.entity.models import Contact
 from src.repository import contacts as contact_repository
+from src.repository import phones as phones_repository
 from src.schemas.contacts import (
 	ContactCreateSchema,
 	ContactResponseSchema,
@@ -79,6 +80,17 @@ async def create_contact(
 		) -> Contact:
 	"""Створює новий контакт."""
 
+	for phone_data in contact_data.phones:
+		phone = await phones_repository.get_phone_by_number(
+				db=db,
+				phone_number=phone_data.number,
+				)
+		if phone is not None:
+			raise HTTPException(
+					status_code=status.HTTP_409_CONFLICT,
+					detail="Phone already exists",
+					)
+
 	contact = await contact_repository.create_contact(
 			db=db,
 			contact_data=contact_data,
@@ -97,6 +109,17 @@ async def update_contact(
 		db: AsyncSession = Depends(get_db),
 		) -> Contact:
 	"""Оновлює контакт за його ідентифікатором."""
+
+	for phone_data in contact_data.phones:
+		phone = await phones_repository.get_phone_by_number(
+				db=db,
+				phone_number=phone_data.number,
+				)
+		if phone is not None:
+			raise HTTPException(
+					status_code=status.HTTP_409_CONFLICT,
+					detail="Phone already exists",
+					)
 
 	contact = await contact_repository.update_contact(
 			db=db,

@@ -78,6 +78,16 @@ async def create_phone(
 		) -> Phone:
 	"""Створює новий телефонний номер."""
 
+	phone = await phones_repository.get_phone_by_number(
+			db=db,
+			phone_number=phone_data.number,
+			)
+	if phone is not None:
+		raise HTTPException(
+				status_code=status.HTTP_409_CONFLICT,
+				detail="Phone already exists",
+				)
+
 	phone = await phones_repository.create_phone(
 			db=db,
 			phone_data=phone_data,
@@ -96,6 +106,16 @@ async def update_phone(
 		db: AsyncSession = Depends(get_db),
 		) -> Phone:
 	"""Оновлює телефонний номер за його ідентифікатором."""
+
+	phone = await phones_repository.get_phone_by_number(
+			db=db,
+			phone_number=phone_data.number,
+			)
+	if phone is not None:
+		raise HTTPException(
+				status_code=status.HTTP_409_CONFLICT,
+				detail="Phone already exists",
+				)
 
 	phone = await phones_repository.update_phone(
 			db=db,
