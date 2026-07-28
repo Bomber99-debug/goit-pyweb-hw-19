@@ -221,6 +221,5 @@ picture/
 test.py
 log_file.txt
 logging.log
-alembic/
 
 config.ini
