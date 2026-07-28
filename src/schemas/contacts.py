@@ -31,13 +31,13 @@ class PhoneResponseSchema(PhoneBaseSchema):
 
 	# Перевизначає поле з PhoneBaseSchema без перевірки довжини.
 	# Це потрібно для старих номерів у базі, наприклад "string".
-	number: str
+	number: str = Field(min_length=9, max_length=13)
 
 
 class ContactPhoneCreateSchema(BaseModel):
 	"""Номер телефону під час створення контакту."""
 
-	number: str
+	number: str = Field(min_length=9, max_length=13)
 
 
 class ContactBaseSchema(BaseModel):
@@ -62,20 +62,20 @@ class ContactResponseSchema(BaseModel):
 	model_config = ConfigDict(from_attributes=True)
 
 	id: int
-	first_name: str
-	last_name: str
+	first_name: str = Field(min_length=3, max_length=50)
+	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
 	birthday: date
-	notes: str | None = None
+	notes: str | None = Field(default=None, max_length=1000)
 	phones: list[ PhoneResponseSchema ]
 
 
 class ContactCreateSchema(BaseModel):
 	"""Дані для створення контакту."""
 
-	first_name: str
-	last_name: str
+	first_name: str = Field(min_length=3, max_length=50)
+	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
 	birthday: date
-	notes: str | None = None
+	notes: str | None = Field(default=None, max_length=1000)
 	phones: list[ ContactPhoneCreateSchema ]
