@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class PhoneBaseSchema(BaseModel):
 	"""Базові дані телефонного номера."""
-
+	id: int
 	number: str = Field(min_length=9, max_length=13)
 	contact_id: int
 
@@ -42,7 +42,7 @@ class ContactPhoneCreateSchema(BaseModel):
 
 class ContactBaseSchema(BaseModel):
 	"""Базові дані контакту."""
-
+	id: int
 	first_name: str = Field(min_length=3, max_length=50)
 	last_name: str = Field(min_length=3, max_length=50)
 	email: EmailStr
