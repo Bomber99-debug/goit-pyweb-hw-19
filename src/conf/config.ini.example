@@ -1,6 +1,6 @@
 [DEV_DB]
 USER=postgres
-DB_NAME=quotes_db
+DB_NAME=contacts_db
 PASSWORD=your_password
 HOST=localhost
 PORT=5432
